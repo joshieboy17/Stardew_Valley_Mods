@@ -204,18 +204,41 @@ namespace Omegasis.HappyBirthday
             if (this.contentPacksInitalized) return;
             if (this.Helper.ContentPacks.GetOwned().Count() == 0)
             {
-                throw new InvalidDataException("There are ZERO Happy birthday content packs found for the mod. Without at least one installed there is no guaranteed that this mod will work due to missing dialogue errors. Please install at least one HappyBirthdayContent pack before continuing. One can be found at https://www.nexusmods.com/stardewvalley/mods/11148 for English dialogue. Thank you!");
+                this.drawDialogueBoxWithError("There are ZERO Happy birthday content packs found for the mod. Without at least one installed there is no guaranteed that this mod will work due to missing dialogue errors. Please install at least one HappyBirthdayContent pack before continuing. One can be found at https://www.nexusmods.com/stardewvalley/mods/11148 for English dialogue. Thank you!");
+                return;
             }
 
             foreach (IContentPack contentPack in this.Helper.ContentPacks.GetOwned())
             {
                 this.happyBirthdayContentPackManager.registerNewContentPack(contentPack);
             }
+
+            if (this.happyBirthdayContentPackManager.getHappyBirthdayContentPacksForCurrentLanguageCode().Count == 0)
+            {
+                if (HappyBirthdayModCore.Configs.modConfig.fallbackToEnglishTranslationWhenPossible)
+                {
+                    if (this.happyBirthdayContentPackManager.getHappyBirthdayContentPacksForEnglishLanguageCode().Count == 0)
+                    {
+                        this.drawDialogueBoxWithError(string.Format("There were zero content packs for Happy Birthday for the English language code en-US. This is a fatal error as the modded cutscenes WILL NOT work without at least one proper content pack installed. Did you mean to install one? One can be found at https://www.nexusmods.com/stardewvalley/mods/11148 for English dialogue. If one is installed, is the language code in TranslationInfo.json correct?", LocalizationUtilities.GetCurrentLanguageCodeString()));
+                        return;
+                    }
+                }
+
+                this.drawDialogueBoxWithError(string.Format("There were zero content packs for Happy Birthday for the given language code {0}. This is a fatal error as the modded cutscenes WILL NOT work without at least one proper content pack installed. Did you mean to install one? If one is installed, is the language code in TranslationInfo.json correct?", LocalizationUtilities.GetCurrentLanguageCodeString()));
+                return;
+            }
+
             this.giftManager.addInPotentialGiftsFromNPCsFromContentPacks();
             MailUtilities.RemoveAllBirthdayMail();
 
             BirthdayEventUtilities.InitializeBirthdayEvents();
             this.contentPacksInitalized = true;
+        }
+
+        private void drawDialogueBoxWithError(string error)
+        {
+            Game1.activeClickableMenu = new DialogueBox(error);
+            this.Monitor.Log(error, LogLevel.Error);
         }
 
         /// <summary>Raised before the game begins writes data to the save file (except the initial save creation).</summary>

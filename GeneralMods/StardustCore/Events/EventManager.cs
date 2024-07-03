@@ -159,25 +159,28 @@ namespace Omegasis.StardustCore.Events
                 }
                 if (Game1.eventUp == true)
                 {
-                    if (this.events[EventName].stardewEventId.Equals(Game1.CurrentEvent.id))
+                    if (this.events.ContainsKey(EventName) && this.events[EventName] != null && Game1.CurrentEvent != null)
                     {
-                        this.concurrentEventActions.Clear(); //Clean all old parallel actions before starting a new event.
-                        bool started2=this.events[EventName].startEventAtLocationifPossible();
-                        if (started2)
+                        if (this.events[EventName].stardewEventId.Equals(Game1.CurrentEvent.id))
                         {
-                            if (this.seenEvents.ContainsKey(Game1.player))
+                            this.concurrentEventActions.Clear(); //Clean all old parallel actions before starting a new event.
+                            bool started2 = this.events[EventName].startEventAtLocationifPossible();
+                            if (started2)
                             {
-                                this.seenEvents[Game1.player].Add(this.events[EventName]);
-                            }
-                            else
-                            {
-                                this.seenEvents.Add(Game1.player, new HashSet<EventHelper>() { this.events[EventName] });
+                                if (this.seenEvents.ContainsKey(Game1.player))
+                                {
+                                    this.seenEvents[Game1.player].Add(this.events[EventName]);
+                                }
+                                else
+                                {
+                                    this.seenEvents.Add(Game1.player, new HashSet<EventHelper>() { this.events[EventName] });
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        return;
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
                 this.concurrentEventActions.Clear(); //Clean all old parallel actions before starting a new event.

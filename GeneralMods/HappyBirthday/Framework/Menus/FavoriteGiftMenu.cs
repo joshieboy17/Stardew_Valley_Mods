@@ -81,15 +81,15 @@ namespace Omegasis.HappyBirthday.Framework.Menus
 
         public static Vector2 getAppropriateMenuPosition()
         {
-            Vector2 defaultPosition = new Vector2(Game1.viewport.Width / 2 - menuWidth / 2, (Game1.viewport.Height / 2 - menuHeight / 2));
+            Vector2 defaultPosition = new Vector2(Game1.uiViewport.Width / 2 - menuWidth / 2, (Game1.uiViewport.Height / 2 - menuHeight / 2));
 
             //Force the viewport into a position that it should fit into on the screen???
-            if (defaultPosition.X + menuWidth > Game1.viewport.Width)
+            if (defaultPosition.X + menuWidth > Game1.uiViewport.Width)
             {
                 defaultPosition.X = 0;
             }
 
-            if (defaultPosition.Y + menuHeight > Game1.viewport.Height)
+            if (defaultPosition.Y + menuHeight > Game1.uiViewport.Height)
             {
                 defaultPosition.Y = 0;
             }
@@ -122,8 +122,6 @@ namespace Omegasis.HappyBirthday.Framework.Menus
         public override void gameWindowSizeChanged(Rectangle oldBounds, Rectangle newBounds)
         {
             base.gameWindowSizeChanged(oldBounds, newBounds);
-            this.xPositionOnScreen = Game1.viewport.Width / 2 - (632 + borderWidth * 2) / 2;
-            this.yPositionOnScreen = Game1.viewport.Height / 2 - (600 + borderWidth * 2) / 2 - Game1.tileSize;
             this.setUpPositions();
         }
 
@@ -208,6 +206,9 @@ namespace Omegasis.HappyBirthday.Framework.Menus
         {
             if (i == null)
             {
+                return;
+            }
+            if (this.potentialFavoriteGiftIds.Contains(i.QualifiedItemId)) {
                 return;
             }
             this.potentialFavoriteGiftIds.Add(i.QualifiedItemId);

@@ -105,7 +105,7 @@ namespace Omegasis.HappyBirthday.Framework.ContentPack
 
                 }
             }
-            throw new Exception(string.Format("There were zero content packs for Happy Birthday for the given language code {0}. This is a fatal error as the modded cutscenes WILL NOT work without at least one proper content pack installed. Did you mean to install one? If one is installed, is the language code in TranslationInfo.json correct?", LocalizationUtilities.GetCurrentLanguageCodeString()));
+            return new List<HappyBirthdayContentPack>();
 
         }
 
@@ -118,7 +118,7 @@ namespace Omegasis.HappyBirthday.Framework.ContentPack
             }
             else
             {
-                throw new Exception(string.Format("There were zero content packs for Happy Birthday for the English language code en-US. This is a fatal error as the modded cutscenes WILL NOT work without at least one proper content pack installed. Did you mean to install one? If one is installed, is the language code in TranslationInfo.json correct?", LocalizationUtilities.GetCurrentLanguageCodeString()));
+                return new List<HappyBirthdayContentPack>();
             }
         }
 
